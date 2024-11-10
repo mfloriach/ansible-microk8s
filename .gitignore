@@ -3,5 +3,4 @@ files/*
 !files/edit_user.py
 !files/requirements.txt
 outputs/*
-nodes.ini
 .vscode

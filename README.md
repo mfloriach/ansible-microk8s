@@ -1,6 +1,6 @@
-# Ansible playbook to install K0S
+# Ansible playbook to install Microk8s
 
-Set of tasks to install k0s as single node or cluster.
+Set of tasks to install microk8s as single node or cluster.
 
 ## Installation
 ```
