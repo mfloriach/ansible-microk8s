@@ -1,0 +1,17 @@
+- name: Install cluster controller
+  hosts: master
+  become: true
+  tasks:
+    - include_tasks: ../playbooks/install.yaml
+    - include_tasks: ../playbooks/master.yaml
+    - include_tasks: ../playbooks/token.yaml
+
+- name: Install cluster workers
+  hosts: nodes
+  become: true
+  tasks:
+    - include_tasks: ../playbooks/install.yaml
+    - include_tasks: ../playbooks/node.yaml
+      vars:
+        master: "{{ hostvars['controller'].ansible_host }}"
+        token: "{{ hostvars['DUMMY_HOST']['token'] }}"

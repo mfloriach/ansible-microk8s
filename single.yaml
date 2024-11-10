@@ -1,0 +1,19 @@
+- name: Install single cluster
+  hosts: master
+  become: true
+  vars:
+    - username: read-only
+  tasks:
+    - name: Find out playbooks path
+      shell: pwd
+      register: playbook_path_output
+      delegate_to: localhost
+      become: false
+    
+    - include_tasks: playbooks/install.yaml
+
+    - include_tasks: playbooks/master.yaml
+
+    - include_tasks: playbooks/rbac.yaml
+
+    - include_tasks: playbooks/kustomize.yaml

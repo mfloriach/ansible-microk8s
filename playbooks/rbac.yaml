@@ -1,0 +1,30 @@
+- name: Create key
+  command: "openssl genrsa -out {{ username }}.key 2048"
+  register: res
+
+- name: Create cert
+  command: 'openssl req -new -key {{ username }}.key -out {{ username }}.csr -subj "/CN={{ username }}/O=group"'
+  register: res
+
+- name: Sign certificate
+  command: "openssl x509 -req -in {{ username }}.csr -CA /var/snap/microk8s/current/certs/ca.crt -CAkey /var/snap/microk8s/current/certs/ca.key -CAcreateserial -out {{ username }}.crt -days 365"
+  register: res
+
+- name: Get Key
+  ansible.builtin.fetch:
+    src: "{{ username }}.key"
+    dest: "outputs/{{ username }}.key"
+    flat: yes
+
+- name: Get Certificate
+  ansible.builtin.fetch:
+    src: "{{ username }}.crt"
+    dest: "outputs/{{ username }}.crt"
+    flat: yes
+
+- name: Fix kube config Read Only
+  ansible.builtin.script:
+    cmd: "{{playbook_path_output.stdout}}/files/edit_user.py --name {{username}} --ip {{ hostvars['controller'].ansible_host }} --output {{playbook_path_output.stdout}}/outputs --kube_config {{playbook_path_output.stdout}}/outputs/kube-config-admin"
+    executable: "{{playbook_path_output.stdout}}/files/bin/python3"
+  delegate_to: localhost
+  become: false

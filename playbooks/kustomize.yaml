@@ -1,0 +1,6 @@
+- name: Deploy
+  become: false
+  delegate_to: localhost
+  kubernetes.core.k8s:
+    kubeconfig: "{{playbook_path_output.stdout}}/outputs/kube-config-admin"
+    definition: "{{ lookup('kubernetes.core.kustomize', dir='{{playbook_path_output.stdout}}/kustomize') }}"

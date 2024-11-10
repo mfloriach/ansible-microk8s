@@ -1,0 +1,16 @@
+- name: Enable services
+  ansible.builtin.command: microk8s enable dns storage rbac ingress
+
+- name: Store microk8s context
+  ansible.builtin.fetch:
+    src: /var/snap/microk8s/current/credentials/client.config
+    dest: outputs/kube-config-admin
+    flat: yes
+
+- name: Fix kube config Admin
+  ansible.builtin.script:
+    cmd: "{{playbook_path_output.stdout}}/files/edit.py --ip {{ hostvars['controller'].ansible_host }} --kube_config {{playbook_path_output.stdout}}/outputs/kube-config-admin"
+    executable: "{{playbook_path_output.stdout}}/files/bin/python3"
+  delegate_to: localhost
+  become: false
+

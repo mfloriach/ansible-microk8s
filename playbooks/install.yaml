@@ -1,0 +1,14 @@
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Install microk8s
+  community.general.snap:
+    name: microk8s
+    classic: yes
+
+- name: Add user to group
+  user:
+    name: marti
+    groups: microk8s
+    append: yes

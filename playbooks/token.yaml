@@ -1,0 +1,8 @@
+- name: Get controller token
+  command: microk8s add-node --format token
+  register: token
+
+- name: Register dummy host with variable
+  add_host:
+    name: "DUMMY_HOST"
+    token: "{{ token.stdout }}"

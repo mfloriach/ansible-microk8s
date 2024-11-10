@@ -1,0 +1,9 @@
+- name: Debug token
+  debug: msg="microk8s join {{ master }}:25000/{{ token }}"
+
+- name: Join cluster
+  command: "microk8s join {{ master }}:25000/{{ token }}"
+  register: res
+
+- debug: msg="{{ res.stdout }}"
+- debug: msg="{{ res.stderr }}"
